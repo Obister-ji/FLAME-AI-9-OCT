@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    /* Flame AI Brand Colors */
+    --forest-green: 140 30% 25%;        /* Deep Forest Green #2C5530 */
+    --sage-green: 140 30% 75%;          /* Soft Sage #B8D4C2 */
+    --warm-coral: 8 65% 65%;            /* Warm Coral #E8756B */
+    --cream: 45 20% 95%;                /* Cream #F5F2EA */
+    --charcoal: 0 0% 20%;               /* Charcoal #333333 */
+    /* Semantic Color System */
+    --background: 45 20% 95%;           /* Cream background */
+    --foreground: 0 0% 20%;             /* Charcoal text */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 20%;
+    --primary: 140 30% 25%;             /* Forest Green */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 140 30% 75%;           /* Sage Green */
+    --secondary-foreground: 140 30% 25%;
+    --muted: 140 15% 88%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 8 65% 65%;                /* Warm Coral */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 140 15% 85%;
+    --input: 140 15% 92%;
+    --ring: 140 30% 25%;
+    --radius: 0.75rem;
+  }
+}
+
+body {
+  font-family: 'Inter', 'Fraunces', serif, sans-serif;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/* Headings use display font */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Fraunces', serif;
+  color: hsl(var(--primary));
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.8);
+}
+
+/* Animation classes */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Gradient backgrounds */
+.gradient-primary {
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+}
+
+.gradient-accent {
+  background: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--warm-coral)));
+}
+
+/* Textarea auto-resize */
+textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Custom button styles */
+.btn-primary {
+  @apply bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-primary/90 hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-secondary-foreground px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-secondary/90 hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+.btn-outline {
+  @apply border-2 border-primary text-primary px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+/* Card styles */
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer;
+}
+
+/* Loading spinner */
+.spinner {
+  @apply inline-block animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary;
+}
+
+/* Prompt text styling */
+.prompt-text {
+  @apply font-mono text-sm bg-muted p-3 rounded-lg border border-border;
+}
+
+/* Copy button */
+.copy-btn {
+  @apply absolute top-2 right-2 p-2 rounded-md bg-muted/80 hover:bg-muted transition-colors duration-200 opacity-0 group-hover:opacity-100;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .hero-title {
+    @apply text-3xl;
+  }
+  
+  .hero-subtitle {
+    @apply text-xl;
+  }
+}
