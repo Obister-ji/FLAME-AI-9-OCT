@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Menu, X, Mail, History, Home } from 'lucide-react';
+import { Menu, X, Mail, History, Home, User } from 'lucide-react';
+import { SignedIn, SignedOut, SignInButton, UserButton } from './ClerkAuthWrapper';
 
 interface NavigationProps {
   currentView: 'generator' | 'history';
@@ -54,6 +55,27 @@ export function Navigation({ currentView, onViewChange, emailCount }: Navigation
                 </button>
               );
             })}
+
+            {/* Authentication */}
+            <SignedIn>
+              <div className="flex items-center space-x-2">
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-10 h-10",
+                    },
+                  }}
+                />
+              </div>
+            </SignedIn>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
+                  <User className="w-4 h-4" />
+                  <span>Login</span>
+                </button>
+              </SignInButton>
+            </SignedOut>
           </div>
           
           {/* Mobile Menu Button */}
@@ -99,6 +121,30 @@ export function Navigation({ currentView, onViewChange, emailCount }: Navigation
                   </button>
                 );
               })}
+
+              {/* Mobile Authentication */}
+              <SignedIn>
+                <div className="flex items-center justify-center px-2 py-1 pt-2 border-t">
+                  <UserButton
+                    appearance={{
+                      elements: {
+                        avatarBox: "w-10 h-10",
+                      },
+                    }}
+                  />
+                </div>
+              </SignedIn>
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors justify-center w-full"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>Login</span>
+                  </button>
+                </SignInButton>
+              </SignedOut>
             </div>
           </div>
         )}

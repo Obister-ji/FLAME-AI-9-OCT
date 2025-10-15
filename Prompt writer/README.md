@@ -1,18 +1,19 @@
-# AI Prompt Writer - Flame AI
+# AI Prompt Writer Chat - Flame AI
 
-A professional AI Prompt Writer web application with a clean frontend inspired by Remove.bg design system and backend processing handled through n8n workflows.
+A professional AI Prompt Writer web application with chat-based and structured input interfaces for iterative prompt refinement, powered by n8n workflows.
 
 ## Features
 
-- 🎨 **Clean, Modern UI** - Inspired by Remove.bg with Flame AI branding
-- 🚀 **AI-Powered Prompt Generation** - Generate optimized prompts using advanced AI
-- 📝 **Template System** - Pre-built templates for various use cases
-- 📚 **Prompt History** - Save, organize, and manage your prompts
-- 🔍 **Search & Filter** - Find prompts quickly with advanced search
-- ⭐ **Favorites** - Mark your best prompts for easy access
+- 🎯 **Structured Input Interface** - Provide detailed, structured inputs for precise AI responses
+- 💬 **Interactive Chat Interface** - Have conversations with AI to refine your prompts
+- 🔄 **Iterative Refinement** - Improve prompts through multiple rounds of feedback
+- 📚 **Conversation History** - Save and manage multiple prompt conversations
+- 🔍 **Search Conversations** - Find specific conversations quickly
+- 📝 **Template System** - Pre-built templates for various use cases (Generator view)
+- 📋 **Prompt History** - Traditional prompt management (History view)
 - 📱 **Responsive Design** - Works perfectly on all devices
 - 🔄 **n8n Integration** - Backend processing through n8n workflows
-- 💾 **Export Options** - Download prompts in various formats
+- 💾 **Export Options** - Download conversations and prompts in various formats
 
 ## Tech Stack
 
@@ -61,9 +62,9 @@ npm run dev
 ### Setup Instructions
 
 1. **Current n8n Integration Status**:
-   - The provided n8n endpoint (`https://n8n.srv970139.hstgr.cloud/form/clean-idea-weaver`) is configured as a form trigger
-   - This endpoint returns an HTML form interface rather than a JSON API
-   - The application currently uses a simulated AI response that mimics what the n8n workflow would return
+   - The provided n8n endpoint (`https://n8n.srv970139.hstgr.cloud/webhook/0dcd9b71-bf7f-4519-86bd-20304f600c4c`) is configured as a webhook trigger
+   - This endpoint is connected to the prompt writer workflow
+   - The application uses this endpoint to process prompt optimization requests through n8n
 
 2. **For Full n8n Integration**:
    - Create a new n8n workflow with a Webhook trigger that returns JSON
@@ -72,15 +73,15 @@ npm run dev
    - Update the endpoint URL in `src/services/api.ts`
 
 3. **Current Implementation**:
-   - The app simulates AI prompt optimization based on the input
-   - It generates realistic suggestions and improvements
-   - The UI and functionality work exactly as they would with a real n8n backend
-   - This provides a complete user experience while the n8n backend is being configured
+   - The app is now fully connected to the n8n webhook endpoint
+   - It sends prompt optimization requests to the n8n workflow
+   - The application processes the responses from the n8n workflow
+   - This provides a complete user experience with real AI-powered prompt optimization
 
 4. **Testing the Integration**:
-   - The application is fully functional with the simulated responses
+   - The application is fully functional with the connected n8n backend
    - You can test all features: prompt generation, templates, history, etc.
-   - When the n8n workflow is properly configured, simply update the API service to use the real endpoint
+   - The webhook endpoint is configured to process prompt optimization requests
 
 ### Example n8n Workflow
 
@@ -163,10 +164,12 @@ npm run dev
 Prompt writer/
 ├── src/
 │   ├── components/
-│   │   ├── Navigation.tsx          # Main navigation
-│   │   ├── HeroSection.tsx         # Hero section
-│   │   ├── PromptGenerator.tsx     # Main prompt generator
-│   │   ├── PromptHistory.tsx       # Prompt history management
+│   │   ├── Navigation.tsx          # Main navigation with chat support
+│   │   ├── HeroSection.tsx         # Hero section (chat-focused)
+│   │   ├── PromptChat.tsx          # Chat-based prompt interface
+│   │   ├── ConversationHistory.tsx # Conversation management
+│   │   ├── PromptGenerator.tsx     # Template-based prompt generator
+│   │   ├── PromptHistory.tsx       # Traditional prompt history
 │   │   └── Footer.tsx              # Footer component
 │   ├── services/
 │   │   └── api.ts                  # n8n API integration

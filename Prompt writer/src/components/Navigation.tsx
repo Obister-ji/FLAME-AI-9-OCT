@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
-import { Menu, X, Sparkles, History, Home } from 'lucide-react';
+import { Menu, X, Sparkles, History, Home, MessageSquare, Archive, Target, User } from 'lucide-react';
+import { SignedIn, SignedOut, SignInButton, UserButton } from './ClerkAuthWrapper';
 
 interface NavigationProps {
-  currentView: 'generator' | 'history';
-  onViewChange: (view: 'generator' | 'history') => void;
+  currentView: 'generator' | 'history' | 'chat' | 'conversations' | 'structured';
+  onViewChange: (view: 'generator' | 'history' | 'chat' | 'conversations' | 'structured') => void;
   promptCount: number;
+  conversationCount?: number;
 }
 
-export function Navigation({ currentView, onViewChange, promptCount }: NavigationProps) {
+export function Navigation({ currentView, onViewChange, promptCount, conversationCount = 0 }: NavigationProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
+    { id: 'structured', label: 'Structured', icon: Target },
+    { id: 'chat', label: 'Chat', icon: MessageSquare },
+    { id: 'conversations', label: 'Conversations', icon: Archive },
     { id: 'generator', label: 'Generator', icon: Home },
     { id: 'history', label: 'History', icon: History },
   ];
@@ -37,7 +42,7 @@ export function Navigation({ currentView, onViewChange, promptCount }: Navigatio
               return (
                 <button
                   key={item.id}
-                  onClick={() => onViewChange(item.id as 'generator' | 'history')}
+                  onClick={() => onViewChange(item.id as 'generator' | 'history' | 'chat' | 'conversations' | 'structured')}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium ${
                     currentView === item.id
                       ? 'bg-primary text-primary-foreground'
@@ -51,9 +56,35 @@ export function Navigation({ currentView, onViewChange, promptCount }: Navigatio
                       {promptCount}
                     </span>
                   )}
+                  {item.id === 'conversations' && conversationCount > 0 && (
+                    <span className="ml-1 px-2 py-0.5 text-xs bg-accent text-accent-foreground rounded-full">
+                      {conversationCount}
+                    </span>
+                  )}
                 </button>
               );
             })}
+
+            {/* Authentication */}
+            <SignedIn>
+              <div className="flex items-center space-x-2">
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-10 h-10",
+                    },
+                  }}
+                />
+              </div>
+            </SignedIn>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
+                  <User className="w-4 h-4" />
+                  <span>Login</span>
+                </button>
+              </SignInButton>
+            </SignedOut>
           </div>
           
           {/* Mobile Menu Button */}
@@ -80,7 +111,7 @@ export function Navigation({ currentView, onViewChange, promptCount }: Navigatio
                   <button
                     key={item.id}
                     onClick={() => {
-                      onViewChange(item.id as 'generator' | 'history');
+                      onViewChange(item.id as 'generator' | 'history' | 'chat' | 'conversations' | 'structured');
                       setIsMobileMenuOpen(false);
                     }}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium ${
@@ -96,9 +127,38 @@ export function Navigation({ currentView, onViewChange, promptCount }: Navigatio
                         {promptCount}
                       </span>
                     )}
+                    {item.id === 'conversations' && conversationCount > 0 && (
+                      <span className="ml-1 px-2 py-0.5 text-xs bg-accent text-accent-foreground rounded-full">
+                        {conversationCount}
+                      </span>
+                    )}
                   </button>
                 );
               })}
+
+              {/* Mobile Authentication */}
+              <SignedIn>
+                <div className="flex items-center justify-center px-2 py-1 pt-2 border-t">
+                  <UserButton
+                    appearance={{
+                      elements: {
+                        avatarBox: "w-10 h-10",
+                      },
+                    }}
+                  />
+                </div>
+              </SignedIn>
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors justify-center w-full"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>Login</span>
+                  </button>
+                </SignInButton>
+              </SignedOut>
             </div>
           </div>
         )}

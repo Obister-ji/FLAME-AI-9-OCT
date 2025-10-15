@@ -2,7 +2,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 // n8n webhook endpoint
-const N8N_WEBHOOK_URL = 'https://n8n.srv970139.hstgr.cloud/form/clean-idea-weaver';
+const N8N_WEBHOOK_URL = 'https://n8n.srv970139.hstgr.cloud/webhook/0dcd9b71-bf7f-4519-86bd-20304f600c4c';
 
 export interface PromptGenerationRequest {
   prompt: string;
@@ -27,36 +27,45 @@ class ApiService {
 
   async generateOptimizedPrompt(request: PromptGenerationRequest): Promise<PromptGenerationResponse> {
     try {
-      // Since n8n is returning an HTML form, we'll use a simulated response
-      // In a real implementation, you would need to either:
-      // 1. Set up a proper webhook endpoint in n8n that returns JSON
-      // 2. Use a headless browser to interact with the form
-      // 3. Configure n8n to return JSON responses
+      // Try to make a POST request to the webhook
+      const response = await axios.post(this.baseURL, request, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        timeout: 15000
+      });
       
-      // For now, we'll simulate the AI response based on the input
-      const optimizedPrompt = this.simulateAIResponse(request);
+      // If we get a successful response, return it
+      if (response.data && response.data.success) {
+        return response.data;
+      }
       
+      // If the response doesn't have the expected structure, return error
+      console.log('Webhook response not in expected format');
       return {
-        success: true,
-        data: {
-          optimizedPrompt,
-          suggestions: this.generateSuggestions(request.prompt),
-          improvements: this.generateImprovements(request.prompt)
-        }
+        success: false,
+        error: 'Invalid response format from webhook'
       };
     } catch (error) {
       console.error('API Error:', error);
       
       if (axios.isAxiosError(error)) {
+        // Handle specific webhook errors
+        if (error.response?.status === 404) {
+          console.log('Webhook not configured for POST requests');
+          return {
+            success: false,
+            error: 'Webhook not configured for POST requests'
+          };
+        }
+        
         const errorMessage = error.response?.data?.error || error.message;
-        toast.error(`API Error: ${errorMessage}`);
         return {
           success: false,
           error: errorMessage
         };
       }
       
-      toast.error('Failed to generate prompt. Please try again.');
       return {
         success: false,
         error: 'Unknown error occurred'
@@ -201,21 +210,23 @@ export function generateFallbackPrompt(prompt: string): string {
 // Utility function to check if n8n service is available
 export async function checkN8nAvailability(): Promise<boolean> {
   try {
-    // Check if the n8n endpoint is accessible
+    // Check if the n8n endpoint is accessible with a quick GET request
     const response = await axios.get(N8N_WEBHOOK_URL, {
       timeout: 5000,
       validateStatus: (status) => status < 500 // Accept any response except server errors
     });
     
-    // Since we know the endpoint returns HTML forms, we'll consider it available
-    // if we get any response that isn't a server error
+    // If we get any response that isn't a server error, consider it available
+    console.log('Webhook endpoint is accessible');
     return true;
   } catch (error) {
     // If it's a timeout or connection error, service is not available
     if (axios.isAxiosError(error) && (error.code === 'ECONNABORTED' || error.code === 'ERR_NETWORK')) {
+      console.log('Webhook endpoint is not accessible');
       return false;
     }
-    // For other errors, the service is available but might be returning HTML
+    // For other errors, the service is available but might have configuration issues
+    console.log('Webhook endpoint is accessible but may have configuration issues');
     return true;
   }
 }

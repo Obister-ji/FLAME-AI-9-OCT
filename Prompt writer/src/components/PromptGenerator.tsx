@@ -107,7 +107,14 @@ export function PromptGenerator({ onPromptGenerated, existingPrompts }: PromptGe
   };
 
   const generateAIPrompt = async () => {
-    const promptText = selectedTemplate ? generatePromptFromTemplate() : customPrompt;
+    let promptText: string;
+    
+    if (selectedTemplate) {
+      generatePromptFromTemplate();
+      promptText = generatedPrompt || customPrompt;
+    } else {
+      promptText = customPrompt;
+    }
     
     if (!promptText.trim()) {
       toast.error('Please enter a prompt or select a template');
@@ -139,18 +146,11 @@ export function PromptGenerator({ onPromptGenerated, existingPrompts }: PromptGe
           throw new Error(response.error || 'Failed to generate prompt');
         }
       } else {
-        // Fallback to local generation
-        console.log('n8n service unavailable, using fallback generation');
-        const enhancedPrompt = generateFallbackPrompt(promptText);
-        setGeneratedPrompt(enhancedPrompt);
-        toast.success('Prompt generated with local optimization!');
+        toast.error('n8n service unavailable. Please check your webhook configuration.');
       }
     } catch (error) {
       console.error('Prompt generation error:', error);
-      // Fallback to local generation on error
-      const enhancedPrompt = generateFallbackPrompt(promptText);
-      setGeneratedPrompt(enhancedPrompt);
-      toast.success('Prompt generated with fallback optimization!');
+      toast.error('Failed to generate prompt. Please check your webhook configuration.');
     } finally {
       setIsGenerating(false);
     }

@@ -150,6 +150,23 @@ export function EmailGenerator({ onEmailGenerated }: EmailGeneratorProps) {
       return;
     }
 
+    // Check if user is authenticated before saving
+    const userId = window.localStorage.getItem('clerk_user_id');
+    if (!userId) {
+      toast.error('Please log in to save emails to your history');
+      return;
+    }
+
+    console.log('Saving email with data:', {
+      subject,
+      content: generatedEmail.substring(0, 100) + '...',
+      recipient,
+      category: emailPurpose,
+      tags,
+      isFavorite: false,
+      userId
+    });
+
     onEmailGenerated({
       subject,
       content: generatedEmail,
